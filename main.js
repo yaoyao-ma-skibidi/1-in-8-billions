@@ -13,6 +13,7 @@ let starImg = new window.Image();
 starImg.src = STAR_IMAGE_SRC;
 
 const sparkleSound = new Audio('sparkle.mp3');
+const cheerSound = new Audio('cheer.mp3');
 
 function resize() {
   lineCanvas.width = window.innerWidth;
@@ -136,6 +137,9 @@ starCanvas.addEventListener('mousedown', e => {
   if (idx !== null) {
     selectedStar = idx;
     sparkleSound.play();
+    if (idx === 0) { // Check if the pink star was clicked
+      cheerSound.play();
+    }
     animateStarEnlargement();
   }
 });
