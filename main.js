@@ -1,8 +1,6 @@
 const STAR_IMAGE_SRC = 'star.png';
 const STAR_SIZE = 16;
 const STAR_SIZE_LARGE = 80;
-const STAR_COUNT = 800;
-const CONNECT_DIST = 100;
 
 const lineCanvas = document.getElementById('lineLayer');
 const starCanvas = document.getElementById('starLayer');
@@ -21,6 +19,9 @@ function resize() {
   lineCanvas.height = window.innerHeight;
   starCanvas.width = window.innerWidth;
   starCanvas.height = window.innerHeight;
+  generateStars();
+  drawLines();
+  drawStars();
 }
 
 function randomPosition() {
@@ -32,7 +33,21 @@ function randomPosition() {
 
 function generateStars() {
   stars = [];
-  for (let i = 0; i < STAR_COUNT; i++) {
+  const baseStarCount = 800;
+  const refWidth = 1920;
+  const refHeight = 1080;
+  const currentArea = window.innerWidth * window.innerHeight;
+  const refArea = refWidth * refHeight;
+  const dynamicStarCount = Math.max(50, Math.floor(baseStarCount * (currentArea / refArea)));
+
+  const baseConnectDist = 100;
+  const refAvgDim = (refWidth + refHeight) / 2;
+  const currentAvgDim = (window.innerWidth + window.innerHeight) / 2;
+  const dynamicConnectDist = baseConnectDist * (currentAvgDim / refAvgDim);
+
+  window.CONNECT_DIST_DYNAMIC = dynamicConnectDist;
+
+  for (let i = 0; i < dynamicStarCount; i++) {
     let pos = randomPosition();
     // Avoid overlap
     let tries = 0;
@@ -54,7 +69,7 @@ function drawLines() {
     for (let j = i + 1; j < stars.length; j++) {
       let a = stars[i], b = stars[j];
       let dist = Math.hypot(a.x - b.x, a.y - b.y);
-      if (dist < CONNECT_DIST) {
+      if (dist < window.CONNECT_DIST_DYNAMIC) {
         lineCtx.beginPath();
         lineCtx.moveTo(a.x, a.y);
         lineCtx.lineTo(b.x, b.y);
@@ -127,13 +142,8 @@ starCanvas.addEventListener('mousedown', e => {
 
 window.addEventListener('resize', () => {
   resize();
-  drawLines();
-  drawStars();
 });
 
 starImg.onload = () => {
   resize();
-  generateStars();
-  drawLines();
-  drawStars();
 }; 
