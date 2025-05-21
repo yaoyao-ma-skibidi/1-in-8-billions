@@ -67,7 +67,7 @@ const fortunes = [
   "He who throws dirt is losing ground.",
   "Borrow money from a pessimist. They don't expect it back.",
   "Life is what happens to you while you are busy making other plans.",
-  "Help! I'm being held prisoner in a fortune cookie factory.",
+  "Help! I'm being held prisoner in a fortune star factory.",
   "Paradise is always where love dwells.",
   "The one you love is closer than you think.",
   "In dreams and in love there are no impossibilities.",
