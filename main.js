@@ -231,6 +231,124 @@ starCanvas.addEventListener('mousedown', e => {
 
       console.log('Fortune card element created and appended:', fortuneCardElement);
 
+      // Calculate card position to be near the pink star and visible on screen
+      const pinkStar = stars[0];
+      const cardWidth = fortuneCardElement.offsetWidth;
+      const cardHeight = fortuneCardElement.offsetHeight;
+      const starX = pinkStar.x;
+      const starY = pinkStar.y;
+      const starSize = (selectedStar === 0) ? STAR_SIZE_LARGE : STAR_SIZE; // Use current size
+
+      let cardX = starX + starSize / 2 + 10; // Default to right of star
+      let cardY = starY - starSize / 2; // Default to top-align with star
+
+      // Adjust if too far right
+      if (cardX + cardWidth > window.innerWidth - 10) { // 10px padding from edge
+        cardX = starX - starSize / 2 - cardWidth - 10; // Position to the left
+      }
+
+      // Adjust if too low
+      if (cardY + cardHeight > window.innerHeight - 10) { // 10px padding from bottom
+        cardY = window.innerHeight - cardHeight - 10; // Position at the bottom edge with padding
+      }
+
+      // Adjust if too high
+      if (cardY < 10) { // 10px padding from top
+        cardY = 10; // Position at the top edge with padding
+      }
+
+      fortuneCardElement.style.left = `${cardX}px`;
+      fortuneCardElement.style.top = `${cardY}px`;
+
+      // Remove the card after a few seconds
+      setTimeout(() => {
+        if (fortuneCardElement) {
+          fortuneCardElement.remove();
+          fortuneCardElement = null;
+        }
+      }, 8000); // Display for 8 seconds
+    }
+
+    animateStarEnlargement();
+  }
+});
+
+starCanvas.addEventListener('touchstart', e => {
+  // Prevent default touch behavior (like scrolling)
+  e.preventDefault();
+});
+
+starCanvas.addEventListener('touchend', e => {
+  e.preventDefault(); // Prevent default touch behavior
+  const rect = starCanvas.getBoundingClientRect();
+  // Use the position of the first touch point that changed
+  const touchX = e.changedTouches[0].clientX - rect.left;
+  const touchY = e.changedTouches[0].clientY - rect.top;
+  const idx = getStarAt(touchX, touchY);
+  if (idx !== null) {
+    selectedStar = idx;
+
+    // Remove existing fortune card if any
+    if (fortuneCardElement) {
+      fortuneCardElement.remove();
+      fortuneCardElement = null;
+    }
+
+    try {
+      sparkleSound.currentTime = 0;
+      sparkleSound.play();
+    } catch (e) {
+      console.error('Error playing sparkle.mp3:', e);
+    }
+
+    if (idx === 0) { // Check if the pink star was clicked
+      if (cheerSoundLoaded) {
+        try {
+          new Audio('cheer.mp3').play().catch(e => console.error('Error playing cheer.mp3 on click:', e));
+        } catch (e) {
+          console.error('Error creating or playing new Audio for cheer.mp3:', e);
+        }
+      }
+
+      // Display fortune for the pink star
+      const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+      fortuneCardElement = document.createElement('div');
+      fortuneCardElement.classList.add('fortune-card');
+      fortuneCardElement.textContent = randomFortune;
+      fortuneCardElement.style.display = 'block'; // Ensure the card is displayed
+      document.body.appendChild(fortuneCardElement);
+
+      console.log('Fortune card element created and appended:', fortuneCardElement);
+
+      // Calculate card position to be near the pink star and visible on screen
+      const pinkStar = stars[0];
+      const cardWidth = fortuneCardElement.offsetWidth;
+      const cardHeight = fortuneCardElement.offsetHeight;
+      const starX = pinkStar.x;
+      const starY = pinkStar.y;
+      const starSize = (selectedStar === 0) ? STAR_SIZE_LARGE : STAR_SIZE; // Use current size
+
+      let cardX = starX + starSize / 2 + 10; // Default to right of star
+      let cardY = starY - starSize / 2; // Default to top-align with star
+
+      // Adjust if too far right
+      if (cardX + cardWidth > window.innerWidth - 10) { // 10px padding from edge
+        cardX = starX - starSize / 2 - cardWidth - 10; // Position to the left
+      }
+
+      // Adjust if too low
+      if (cardY + cardHeight > window.innerHeight - 10) { // 10px padding from bottom
+        cardY = window.innerHeight - cardHeight - 10; // Position at the bottom edge with padding
+      }
+
+      // Adjust if too high
+      if (cardY < 10) { // 10px padding from top
+        cardY = 10; // Position at the top edge with padding
+      }
+
+      fortuneCardElement.style.left = `${cardX}px`;
+      fortuneCardElement.style.top = `${cardY}px`;
+
       // Remove the card after a few seconds
       setTimeout(() => {
         if (fortuneCardElement) {
