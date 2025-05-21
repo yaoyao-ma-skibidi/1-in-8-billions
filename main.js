@@ -95,6 +95,7 @@ function randomPosition() {
 
 function generateStars() {
   stars = [];
+  const introMessageHeight = 80; // Estimated height of the intro message area
   const baseStarCount = 800;
   const refWidth = 1920;
   const refHeight = 1080;
@@ -111,11 +112,11 @@ function generateStars() {
 
   for (let i = 0; i < dynamicStarCount; i++) {
     let pos = randomPosition();
-    // Avoid overlap
+    // Avoid overlap and intro message area
     let tries = 0;
-    while (tries < 100) {
+    while (tries < 100 || pos.y < introMessageHeight + STAR_SIZE) {
       let overlap = stars.some(s => Math.hypot(s.x - pos.x, s.y - pos.y) < STAR_SIZE);
-      if (!overlap) break;
+      if (!overlap && pos.y >= introMessageHeight + STAR_SIZE) break;
       pos = randomPosition();
       tries++;
     }
