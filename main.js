@@ -215,11 +215,13 @@ starCanvas.addEventListener('mousedown', e => {
       console.error('Error playing sparkle.mp3:', e);
     }
 
-    if (idx === 0 && cheerSoundLoaded) { // Check if the pink star was clicked
-      try {
-        new Audio('cheer.mp3').play().catch(e => console.error('Error playing cheer.mp3 on click:', e));
-      } catch (e) {
-        console.error('Error creating or playing new Audio for cheer.mp3:', e);
+    if (idx === 0) { // Check if the pink star was clicked
+      if (cheerSoundLoaded) {
+        try {
+          new Audio('cheer.mp3').play().catch(e => console.error('Error playing cheer.mp3 on click:', e));
+        } catch (e) {
+          console.error('Error creating or playing new Audio for cheer.mp3:', e);
+        }
       }
 
       // Display fortune for the pink star
@@ -227,15 +229,10 @@ starCanvas.addEventListener('mousedown', e => {
       fortuneCardElement = document.createElement('div');
       fortuneCardElement.classList.add('fortune-card');
       fortuneCardElement.textContent = randomFortune;
-      fortuneCardElement.style.display = 'block';
+      fortuneCardElement.style.display = 'block'; // Ensure the card is displayed
       document.body.appendChild(fortuneCardElement);
 
       console.log('Fortune card element created and appended:', fortuneCardElement);
-
-      // Position the card near the pink star
-      const pinkStar = stars[0];
-      fortuneCardElement.style.left = `${pinkStar.x + STAR_SIZE_LARGE / 2 + 10}px`;
-      fortuneCardElement.style.top = `${pinkStar.y - STAR_SIZE_LARGE / 2}px`;
 
       // Remove the card after a few seconds
       setTimeout(() => {
